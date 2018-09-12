@@ -64,7 +64,7 @@ func (c *Client) GetApplication(id int) (Application, error) {
 	}
 
 	resp := struct {
-		Application Application `json:"channels,omitempty"`
+		Application Application `json:"application,omitempty"`
 	}{}
 
 	_, err := c.Do("GET", reqURL.String(), nil, &resp)
