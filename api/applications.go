@@ -53,6 +53,28 @@ func (c *Client) queryApplications(filters applicationsFilters) ([]Application, 
 	return applications, nil
 }
 
+// GetApplication gets a single application.
+// Ref: https://rpm.newrelic.com/api/explore/applications/show
+func (c *Client) GetApplication(id int) (Application, error) {
+	application := Application{}
+
+	reqURL, err := url.Parse(fmt.Sprintf("/applications/%v.json", id))
+	if err != nil {
+		return nil, err
+	}
+
+	resp := struct {
+		Application Application `json:"channels,omitempty"`
+	}{}
+
+	_, err := c.Do("GET", reqURL.String(), nil, &resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &resp.Channels[0], nil
+}
+
 // ListApplications lists all the applications you have access to.
 func (c *Client) ListApplications() ([]Application, error) {
 	return c.queryApplications(applicationsFilters{})
